@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ musician.name }}{% endblock %}
+
+{% block content %}
+<div class="musician-detail">
+    <h1>{{ musician.name }}</h1>
+    <img src="{{ url_for('static', filename='images/' ~ musician.image) }}" alt="{{ musician.name }}">
+    <p><strong>Instrument:</strong> {{ musician.instrument }}</p>
+    <p><strong>Genre:</strong> {{ musician.genre }}</p>
+    <p>{{ musician.bio }}</p>
+    <audio controls>
+        <source src="{{ url_for('static', filename=musician.song) }}" type="audio/mpeg">
+        Ваш браузер не поддерживает аудиоплеер.
+    </audio>
+    <a href="{{ url_for('main.home') }}">Назад к музыкантам</a>
+</div>
+{% endblock %}

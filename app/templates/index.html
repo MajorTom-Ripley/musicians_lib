@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Список музыкантов{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Наши музыканты</h1>
+
+<!-- Фильтры -->
+<form id="filters" method="GET" action="/">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label for="genreFilter" class="form-label">Фильтр по жанру</label>
+            <select class="form-select" id="genreFilter" name="genre">
+                <option value="">Все жанры</option>
+                <option value="Рок">Рок</option>
+                <option value="Бритпоп">Бритпоп</option>
+                <option value="Альтернативный рок">Альтернативный рок</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="instrumentFilter" class="form-label">Фильтр по инструменту</label>
+            <select class="form-select" id="instrumentFilter" name="instrument">
+                <option value="">Все инструменты</option>
+                <option value="Вокал">Вокал</option>
+                <option value="Гитара">Гитара</option>
+                <option value="Клавишные">Клавишные</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label d-block">&nbsp;</label>
+            <button type="submit" class="btn btn-primary">Применить фильтры</button>
+        </div>
+    </div>
+</form>
+
+<!-- Карточки музыкантов -->
+<div class="row">
+    {% for musician in musicians %}
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <img src="{{ url_for('static', filename='images/' ~ musician.image) }}" class="card-img-top" alt="{{ musician.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ musician.name }}</h5>
+                <p class="card-text"><strong>Жанр:</strong> {{ musician.genre }}</p>
+                <p class="card-text"><strong>Инструмент:</strong> {{ musician.instrument }}</p>
+                <a href="{{ url_for('musician_detail', musician_id=musician.id) }}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Musicians{% endblock %}
+
+{% block content %}
+<h1 class="my-4">Список</h1>
+<div class="row">
+    {% for musician in musicians %}
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <!-- Используем img-fluid для адаптивного изображения -->
+            <img src="{{ url_for('static', filename='images/' ~ musician.image) }}" class="card-img-top img-fluid" alt="{{ musician.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ musician.name }}</h5>
+                <p class="card-text"><strong>Инструмент:</strong> {{ musician.instrument }}</p>
+                <p class="card-text"><strong>Жанр:</strong> {{ musician.genre }}</p>
+                <a href="/musician/{{ musician.id }}" class="btn btn-primary">Подробнее</a>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
