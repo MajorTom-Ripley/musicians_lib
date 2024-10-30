@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Авторизация{% endblock %}
 
 {% block content %}
-<h1>Login</h1>
+<h1>Авторизация</h1>
 <form method="POST">
     {{ form.hidden_tag() }}
-    <div>
-        {{ form.username.label }}<br>
-        {{ form.username(size=32) }}<br>
+    <div class="mb-3">
+        {{ form.username.label(class="form-label") }}
+        {{ form.username(size=32, class="form-control", placeholder="Введите имя пользователя") }}
         {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
-    <div>
-        {{ form.password.label }}<br>
-        {{ form.password(size=32) }}<br>
+    <div class="mb-3">
+        {{ form.password.label(class="form-label") }}
+        {{ form.password(size=32, class="form-control", placeholder="Введите пароль") }}
         {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
-    <div>
-        {{ form.submit() }}
+    <div class="mb-3">
+        {{ form.submit(class="btn btn-primary") }}
     </div>
 </form>
 <a href="{{ url_for('main.register') }}">Зарегистрироваться</a>

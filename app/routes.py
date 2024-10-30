@@ -19,6 +19,9 @@ def musician_detail(id):
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:  # Проверяем, если пользователь уже аутентифицирован
+        return redirect(url_for('main.home'))
+    
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -26,17 +29,25 @@ def login():
             login_user(user)
             return redirect(url_for('main.home'))
         else:
-            flash('Invalid username or password.')
+            flash('Неверное имя пользователя или пароль.')
     return render_template('login.html', form=form)
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:  # Проверяем, если пользователь уже аутентифицирован
+        return redirect(url_for('main.home'))
+    
     form = RegistrationForm()
     if form.validate_on_submit():
+        if User.query.filter_by(username=form.username.data).first():
+            flash('Пользователь с таким именем уже существует.')
+            return render_template('register.html', form=form)
+        
         new_user = User(username=form.username.data, email=form.email.data)
         new_user.set_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
+        flash('Вы успешно зарегистрировались. Пожалуйста, войдите.')
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
 
@@ -44,4 +55,5 @@ def register():
 @login_required
 def logout():
     logout_user()
+    flash('Вы успешно вышли из системы.')
     return redirect(url_for('main.home'))
