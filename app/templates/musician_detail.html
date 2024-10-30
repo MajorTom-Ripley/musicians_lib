@@ -3,16 +3,100 @@
 {% block title %}{{ musician.name }}{% endblock %}
 
 {% block content %}
-<div class="musician-detail">
-    <h1>{{ musician.name }}</h1>
-    <img src="{{ url_for('static', filename='images/' ~ musician.image) }}" alt="{{ musician.name }}">
-    <p><strong>Instrument:</strong> {{ musician.instrument }}</p>
-    <p><strong>Genre:</strong> {{ musician.genre }}</p>
-    <p>{{ musician.bio }}</p>
-    <audio controls>
-        <source src="{{ url_for('static', filename=musician.song) }}" type="audio/mpeg">
-        Ваш браузер не поддерживает аудиоплеер.
-    </audio>
-    <a href="{{ url_for('main.home') }}">Назад к музыкантам</a>
+<div class="musician-detail my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <h1 class="display-4">{{ musician.name }}</h1>
+                <figure class="my-4">
+                    <img src="{{ url_for('static', filename='images/' ~ musician.image) }}" alt="{{ musician.name }}" class="img-fluid rounded shadow">
+                    <figcaption class="mt-2 text-muted">{{ musician.name }} на инструменте {{ musician.instrument }}</figcaption>
+                </figure>
+            </div>
+            <div class="col-md-6">
+                <h5>Смотреть видео</h5>
+                <div class="btn-group mb-3" role="group" aria-label="Video source selection">
+                    <button type="button" class="btn btn-secondary" data-source="youtube">YouTube</button>
+                    <button type="button" class="btn btn-secondary" data-source="rutube">RuTube</button>
+                    <button type="button" class="btn btn-secondary" data-source="plvideo">Plvideo</button>
+                </div>
+                <div id="video-player">
+                    <video controls class="w-100 rounded shadow" playsinline>
+                        <source src="{{ musician.video.youtube.url }}" type="video/mp4" id="video-source">
+                        Ваш браузер не поддерживает видео плеер.
+                    </video>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4 mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Информация о музыканте</h5>
+                <p class="card-text"><strong>Инструмент:</strong> {{ musician.instrument }}</p>
+                <p class="card-text"><strong>Жанр:</strong> {{ musician.genre }}</p>
+                <p class="card-text">{{ musician.bio }}</p>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <h5>Прослушать песню</h5>
+            {% if musician.song %}
+                <audio controls class="w-100" id="audio-player">
+                    <source src="{{ url_for('static', filename=musician.song) }}" type="audio/mpeg">
+                    Ваш браузер не поддерживает аудиоплеер.
+                </audio>
+            {% else %}
+                <p class="text-danger">Песня не доступна.</p>
+            {% endif %}
+        </div>
+
+        <div class="text-center">
+            <a class="btn btn-primary" href="{{ url_for('main.home') }}">Назад к музыкантам</a>
+        </div>
+    </div>
 </div>
+
+<!-- Подключение Plyr JavaScript -->
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Инициализация плеера Plyr
+        const player = new Plyr('#video-player video');
+
+        // Устанавливаем исходные данные для видео
+        const videoSources = {
+            youtube: "{{ musician.video.youtube.url }}",
+            rutube: "{{ musician.video.rutube.url }}",
+            plvideo: "{{ musician.video.plvideo.url }}"
+        };
+
+        // Изменяем источник видео при нажатии на кнопку
+        const buttons = document.querySelectorAll('.btn-group .btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const sourceType = button.getAttribute('data-source');
+                const newSource = videoSources[sourceType];
+
+                // Меняем источник видео
+                const videoSource = document.getElementById('video-source');
+                videoSource.src = newSource;
+
+                // Загружаем новый источник
+                player.source = {
+                    type: 'video',
+                    sources: [
+                        {
+                            src: newSource,
+                            type: 'video/mp4'
+                        }
+                    ]
+                };
+
+                // Воспроизводим видео
+                player.play();
+            });
+        });
+    });
+</script>
 {% endblock %}
