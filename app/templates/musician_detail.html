@@ -14,7 +14,6 @@
             <!-- Видео-плеер -->
             <div class="col-md-6">
                 <div class="video-player p-3">
-                    <label for="videoSource" class="form-label text-dark">Выберите источник видео:</label>
                     <select id="videoSource" class="form-select" onchange="changeVideoSource()">
                         {% if musician.youtube_video_url %}
                             <option value="{{ musician.youtube_video_url }}" selected>YouTube</option>
@@ -23,7 +22,7 @@
                             <option value="{{ musician.rutube_video_url }}">RuTube</option>
                         {% endif %}
                         {% if musician.plvideo_video_url %}
-                            <option value="{{ musician.plvideo_video_url }}">PLVideo</option>
+                            <option value="{{ musician.plvideo_video_url }}">PLvideo</option>
                         {% endif %}
                     </select>
                     <video id="video" class="plyr mt-2" controls>
@@ -47,9 +46,9 @@
         <div class="card-footer">
             <h5 class="text-dark">Музыка:</h5>
             <audio id="musicPlayer" class="plyr" controls>
-                <source src="{{ musician.song }}" type="audio/mpeg">
+                <source src="{{ url_for('static', filename=musician.song) }}" type="audio/mpeg">
                 Ваш браузер не поддерживает воспроизведение аудио.
-            </audio>
+            </audio>            
         </div>
     </div>
 
