@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Изменение профиля{% endblock %}
+
+{% block content %}
+<div class="col-md-6 mx-auto">
+    <h2 class="text-center">Изменение данных профиля</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.surname.label(class="form-label") }}
+            {{ form.surname(class="form-control") }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.patronymic.label(class="form-label") }}
+            {{ form.patronymic(class="form-control") }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.profile_pic.label(class="form-label") }}
+            {{ form.profile_pic(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <a href="{{ url_for('main.profile') }}" class="btn btn-secondary ms-2">Отмена</a>
+    </form>
+</div>
+{% endblock %}

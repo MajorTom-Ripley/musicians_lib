@@ -1,9 +1,11 @@
 # app/routes.py
 
+import os
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
 from .models import db, User, Musician
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, EditProfileForm
 
 main = Blueprint('main', __name__)
 
@@ -19,7 +21,7 @@ def musician_detail(id):
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:  # Проверяем, если пользователь уже аутентифицирован
+    if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     
     form = LoginForm()
@@ -34,7 +36,7 @@ def login():
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:  # Проверяем, если пользователь уже аутентифицирован
+    if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     
     form = RegistrationForm()
@@ -57,3 +59,39 @@ def logout():
     logout_user()
     flash('Вы успешно вышли из системы.')
     return redirect(url_for('main.home'))
+
+@main.route('/albums')
+def albums():
+    return render_template('albums.html')
+
+@main.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
+
+@main.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm(obj=current_user)
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.surname = form.surname.data
+        current_user.patronymic = form.patronymic.data
+        
+        # Обработка загрузки изображения профиля, если пользователь выбрал новое фото
+        if form.profile_pic.data:
+            profile_pic = form.profile_pic.data
+            filename = secure_filename(profile_pic.filename)
+            
+            # Создаем директорию для профиля пользователя, если она не существует
+            user_dir = os.path.join('static/profile_pics', current_user.username)
+            os.makedirs(user_dir, exist_ok=True)
+            
+            # Сохраняем изображение профиля с именем "profile.jpg"
+            profile_pic.save(os.path.join(user_dir, 'profile.jpg'))
+
+        db.session.commit()
+        flash('Данные профиля обновлены', 'success')
+        return redirect(url_for('main.profile'))
+    
+    return render_template('edit_profile.html', form=form)

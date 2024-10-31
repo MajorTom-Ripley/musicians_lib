@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<style>
+    .profile-card {
+        max-width: 500px;
+        background: linear-gradient(135deg, #ff5e7f, #ffcc00);
+        color: #fff;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+        margin: 2rem auto;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, #ff5e7f, #6534e2);
+        padding: 1rem;
+        border-radius: 1rem 1rem 1rem 1rem;
+    }
+
+    .profile-pic {
+        width: 175px;
+        height: 175px;
+        border-radius: 50%; /* Полностью закругляем изображение */
+        border: 4px solid #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        margin-bottom: 1rem;
+        object-fit: cover; /* Обеспечиваем правильное соотношение сторон */
+    }
+
+    .profile-name {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0.5rem 0;
+    }
+
+    .profile-username {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1rem;
+    }
+
+    .profile-info {
+        text-align: left;
+        padding: 1rem;
+    }
+
+    .profile-info p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.3rem 0;
+    }
+
+    .profile-info p strong {
+        color: #ffcc00;
+    }
+
+    .btn-custom, .btn-outline-light {
+        border-radius: 0.5rem; /* Увеличиваем радиус закругления кнопок */
+        padding: 0.6rem 1.2rem;
+        margin: 0.5rem;
+        transition: background 0.3s ease, color 0.3s ease;
+        font-weight: bold;
+        font-size: 1rem;
+        text-transform: uppercase; /* Делаем текст кнопок заглавными */
+    }
+
+    .btn-custom {
+        background: #ff5e7f;
+        border: none;
+        color: #fff;
+    }
+
+    .btn-custom:hover {
+        background: #1a3cff; /* Изменяем цвет на hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Добавляем тень при наведении */
+    }
+
+    .btn-outline-light {
+        color: #fff;
+        border: 2px solid #fff;
+        background: transparent;
+    }
+
+    .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 8px rgba(16, 253, 123, 0.356); /* Добавляем тень при наведении */
+    }
+
+    /* Адаптивный дизайн */
+    @media (max-width: 600px) {
+        .profile-card {
+            width: 90%;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+        }
+
+        .profile-username {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="profile-card">
+    <div class="profile-header">
+        <img src="{{ url_for('static', filename='images/profile_pics/' + (current_user.profile_pic or 'default.jpg')) }}" 
+             alt="Фото профиля" class="profile-pic">
+    </div>
+    <h2 class="profile-name">{{ current_user.name }} {{ current_user.surname }}</h2>
+    <p class="profile-username">@{{ current_user.username }}</p>
+    <div class="profile-info">
+        <p><strong>Имя:</strong> {{ current_user.name }}</p>
+        <p><strong>Фамилия:</strong> {{ current_user.surname }}</p>
+        <p><strong>Отчество:</strong> {{ current_user.patronymic }}</p>
+        <p><strong>Имя пользователя:</strong> {{ current_user.username }}</p>
+    </div>
+    <div class="mt-4 text-center">
+        <a href="{{ url_for('main.edit_profile') }}" class="btn btn-custom">Изменить данные</a>
+        <a href="{{ url_for('main.home') }}" class="btn btn-outline-light">Назад</a>
+    </div>
+</div>
+{% endblock %}

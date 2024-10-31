@@ -5,54 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Музыканты{% endblock %}</title>
 
-    <!-- Подключение стилей Bootstrap и Plyr -->
+    <!-- Подключение стилей Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        header {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* Основные стили */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #40e65c, #6534e2);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        footer {
-            background-color: #343a40;
-            color: #ffffff;
+        header {
+            box-shadow: 0 4px 10px rgb(16, 250, 67);
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
         .navbar-brand {
             font-weight: bold;
+            font-size: 1.9rem;
+            color: #ffcc00; /* Измените цвет при необходимости */
         }
 
-        .alert {
-            margin-bottom: 20px;
+        .navbar-nav .nav-link {
+            font-size: 1.3rem;
+            transition: color 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffcc00; /* Измените цвет при необходимости */
         }
 
         .footer {
-            text-align: center;
+            background-color: #295bce; /* Серо-синий цвет */
+            padding: 3rem 0;
+            color: #fff; /* Белый цвет текста для контраста */
         }
 
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
+        .footer .text-muted {
+            color: rgba(255, 255, 255, 0.8); /* Цвет текста с немного меньшей прозрачностью */
         }
 
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
+        .social-links a {
+            margin: 0 15px;
+            color: #fff; /* Белый цвет для видимости */
+            text-decoration: none;
+            transition: color 0.3s;
         }
 
-        .btn-info {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
+        .social-links a:hover {
+            color: #ffcc00; /* Цвет при наведении */
         }
 
-        /* Стиль для кнопок */
-        .btn {
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+        .alert {
+            border-radius: 0.7rem;
         }
 
-        .btn:hover {
-            opacity: 0.9;
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100%;
+            margin-top: 20px;
+        }
+
+        .form-control {
+            border: 3px solid rgba(252, 38, 205, 0.747);
+            border-radius: 0.5rem;
+            color: #000000;
+            transition: border-color 0.3s ease;
+            width: 100%; /* Занять всю ширину контейнера */
+            max-width: 100%; /* Максимальная ширина поля ввода */
+        }
+
+        .form-control:focus {
+            border-color: #ffcc00;
+            box-shadow: none;
+        }
+
+        .btn-custom {
+            background: linear-gradient(135deg, #ff5e7f, #ffcc00);
+            border: none;
+            border-radius: 0.5rem;
+            transition: background 0.3s ease;
+            color: #fff;
+        }
+
+        .btn-custom:hover {
+            background: linear-gradient(135deg, #ffcc00, #ff5e7f);
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -67,7 +117,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.albums') }}">Альбомы</a>
+                        </li>
                         {% if current_user.is_authenticated %}
+                            <!-- Кнопка профиля для авторизованных пользователей -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.profile') }}">Профиль</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('main.logout') }}">Выход</a>
                             </li>
@@ -83,9 +140,9 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </header>    
 
-    <main class="container mt-4">
+    <main class="container mt-4 flex-grow-1 form-container">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -98,25 +155,29 @@
                 </div>
             {% endif %}
         {% endwith %}
-        {% block content %}{% endblock %}
+
+        {% block content %}
+        {% endblock %}
     </main>
 
-    <footer class="footer mt-auto py-3">
-        <div class="container">
-            <span class="text-muted">&copy; 2024 Все права защищены.</span>
+    <footer class="footer mt-auto py-4">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="text-decoration">&copy; 2024 Все права защищены.</span>
+                </div>
+                <div class="col-md-6">
+                    <div class="social-links">
+                        <a href="#">Facebook</a>
+                        <a href="#">Instagram</a>
+                        <a href="#">Twitter</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- Подключение скриптов в конце документа -->
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha384-Q2P4Fw4s/+6D7LDmYIi6rKkEDh9ScFbW6dNoxVbq/UcImVz/SBEx3gG8Xj+UURQ8" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-
-    <!-- Инициализация Plyr -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const players = Plyr.setup('audio');
-        });
-    </script>
 </body>
 </html>
