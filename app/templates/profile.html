@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<div class="col-md-6 mx-auto">
+    <h2 class="text-center">Профиль пользователя</h2>
+    <p><strong>Имя пользователя:</strong> {{ current_user.username }}</p>
+    <img src="{{ url_for('static', filename='profile_pics/' + current_user.username + '/profile.jpg') }}" alt="Фото профиля" class="img-fluid">
+    <a href="{{ url_for('main.logout') }}" class="btn btn-danger mt-3">Выход</a>
+</div>
+{% endblock %}

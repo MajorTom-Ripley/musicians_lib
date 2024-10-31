@@ -57,3 +57,8 @@ def logout():
     logout_user()
     flash('Вы успешно вышли из системы.')
     return redirect(url_for('main.home'))
+
+@main.route('/albums')
+def albums():
+    # Логика для получения альбомов
+    return render_template('albums.html')
