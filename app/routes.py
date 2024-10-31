@@ -84,7 +84,7 @@ def edit_profile():
             filename = secure_filename(profile_pic.filename)
             
             # Создаем директорию для профиля пользователя, если она не существует
-            user_dir = os.path.join('static/profile_pics', current_user.username)
+            user_dir = os.path.join('app/static/images/profile_pics', current_user.username)
             os.makedirs(user_dir, exist_ok=True)
             
             # Сохраняем изображение профиля с именем "profile.jpg"
